@@ -1,1 +1,1 @@
-"# Smart-Equipment-Rental-Billing-System" 
+To run the file just run Main.java 
