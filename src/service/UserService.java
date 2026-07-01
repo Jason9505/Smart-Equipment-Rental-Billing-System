@@ -21,6 +21,16 @@ public class UserService {
         return null;
     }
 
+    public String updateUser(String id, String name, UserType userType, boolean finalYear) {
+        if (id == null || !userRepo.exists(id)) return "User not found.";
+        User user = userRepo.getById(id);
+        user.setName(name);
+        user.setUserType(userType);
+        user.setFinalYear(finalYear);
+        userRepo.update(user);
+        return null;
+    }
+
     public String deleteUser(String id) {
         if (id == null || !userRepo.exists(id)) return "User not found.";
         userRepo.remove(id);

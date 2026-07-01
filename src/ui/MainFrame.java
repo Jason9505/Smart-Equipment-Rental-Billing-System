@@ -21,6 +21,9 @@ public class MainFrame extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Users", userPanel);
+        tabbedPane.addTab("Equipment", new JPanel());
+        tabbedPane.addTab("Rentals", new JPanel());
+        tabbedPane.addTab("Returns & Billing", new JPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }

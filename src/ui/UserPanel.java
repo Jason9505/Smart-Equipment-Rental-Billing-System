@@ -38,6 +38,10 @@ public class UserPanel extends JPanel {
         addButton.addActionListener(e -> showAddDialog());
         buttonPanel.add(addButton);
 
+        JButton editButton = new JButton("Edit User");
+        editButton.addActionListener(e -> showEditDialog());
+        buttonPanel.add(editButton);
+
         JButton deleteButton = new JButton("Delete User");
         deleteButton.addActionListener(e -> showDeleteDialog());
         buttonPanel.add(deleteButton);
@@ -76,6 +80,76 @@ public class UserPanel extends JPanel {
 
         if (confirm == JOptionPane.YES_OPTION) {
             String error = userService.deleteUser(userId);
+            if (error != null) {
+                JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                refreshTable();
+            }
+        }
+    }
+
+    private void showEditDialog() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a user to edit.",
+                    "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String userId = (String) tableModel.getValueAt(selectedRow, 0);
+        User user = userService.getById(userId);
+        if (user == null) return;
+
+        JTextField idField = new JTextField(user.getUserId(), 10);
+        idField.setEditable(false);
+        JTextField nameField = new JTextField(user.getName(), 20);
+        JComboBox<UserType> typeCombo = new JComboBox<>(UserType.values());
+        typeCombo.setSelectedItem(user.getUserType());
+        JCheckBox finalYearCheck = new JCheckBox("Final Year Student", user.isFinalYear());
+        finalYearCheck.setEnabled(user.getUserType() == UserType.STUDENT);
+
+        typeCombo.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                boolean isStudent = typeCombo.getSelectedItem() == UserType.STUDENT;
+                finalYearCheck.setEnabled(isStudent);
+                if (!isStudent) finalYearCheck.setSelected(false);
+            }
+        });
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        panel.add(new JLabel("User ID:"), gbc);
+        gbc.gridx = 1;
+        panel.add(idField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        panel.add(new JLabel("Name:"), gbc);
+        gbc.gridx = 1;
+        panel.add(nameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        panel.add(new JLabel("Type:"), gbc);
+        gbc.gridx = 1;
+        panel.add(typeCombo, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        panel.add(new JLabel("Final Year:"), gbc);
+        gbc.gridx = 1;
+        panel.add(finalYearCheck, gbc);
+
+        int result = JOptionPane.showConfirmDialog(this, panel,
+                "Edit User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String name = nameField.getText().trim();
+            UserType type = (UserType) typeCombo.getSelectedItem();
+            boolean finalYear = finalYearCheck.isSelected();
+
+            String error = userService.updateUser(userId, name, type, finalYear);
             if (error != null) {
                 JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
             } else {
