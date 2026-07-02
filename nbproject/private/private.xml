@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/smartequipmentrental/Main.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/Main.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/model/User.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/model/UserType.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/repository/UserRepository.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Smart-Equipment-Rental-Billing-System/src/service/UserService.java</file>
         </group>
     </open-files>
 </project-private>
