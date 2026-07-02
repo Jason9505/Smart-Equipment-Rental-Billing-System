@@ -1,4 +1,0 @@
-U001,Dr. Sarah Johnson,STAFF,false
-U002,Ahmad Bin Ali,STUDENT,true
-U003,John Doe,STUDENT,false
-U004,Prof. Jane Smith,STAFF,false
