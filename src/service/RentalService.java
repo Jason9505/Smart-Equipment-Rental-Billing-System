@@ -1,18 +1,16 @@
 package service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import model.*;
 import repository.EquipmentRepository;
 import repository.RentalRepository;
 import repository.UserRepository;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-
 public class RentalService {
-    private static final double DISCOUNT_RATE = 0.10; 
-
+    //for billing calculations, rental management, and observer notifications
+    private final BillingService billingService;
     private final RentalRepository rentalRepo;
     private final EquipmentRepository equipmentRepo;
     private final UserRepository userRepo;
@@ -24,6 +22,7 @@ public class RentalService {
         this.rentalRepo = rentalRepo;
         this.equipmentRepo = equipmentRepo;
         this.userRepo = userRepo;
+        this.billingService = new BillingService();
         this.rentalCounter = computeNextCounter();
     }
 
@@ -87,26 +86,10 @@ public class RentalService {
         User user = userRepo.getById(rental.getUserId());
 
         LocalDate returnDate = LocalDate.now();
-        long heldDays = ChronoUnit.DAYS.between(rental.getRentDate(), returnDate);
-        if (heldDays < 1) heldDays = 1; 
 
-        double baseFee = equipment.getDailyRate() * heldDays;
-
-        double discount = 0.0;
-        if (user != null && user.isEligibleForDiscount()) {
-            discount = baseFee * DISCOUNT_RATE;
-        }
-
-        double penalty = 0.0;
-        if (returnDate.isAfter(rental.getDueDate())) {
-            long lateDays = ChronoUnit.DAYS.between(rental.getDueDate(), returnDate);
-            penalty += lateDays * equipment.getDailyRate() * equipment.getCategory().getLateFeeMultiplier();
-        }
-        if (damaged) {
-            penalty += equipment.getDailyRate() * equipment.getCategory().getDamageFeeMultiplier();
-        }
-
-        RentalBill bill = new RentalBill(baseFee, discount, penalty);
+        // Calculate the bill for the rental, considering any damages
+        RentalBill bill = billingService.calculateBill(
+                equipment, user, rental.getRentDate(), rental.getDueDate(), returnDate, damaged);
 
         rental.setReturnDate(returnDate);
         rental.setDamaged(damaged);

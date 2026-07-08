@@ -1,5 +1,12 @@
 package ui;
 
+import java.awt.*;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import model.Equipment;
 import model.EquipmentCategory;
 import model.Rental;
@@ -9,14 +16,6 @@ import service.EquipmentService;
 import service.RentalObserver;
 import service.RentalService;
 import service.UserService;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class RentalPanel extends JPanel implements RentalObserver {
     private static final String ALL_CATEGORIES = "All Categories";

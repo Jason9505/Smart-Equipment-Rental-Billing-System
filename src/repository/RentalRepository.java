@@ -1,12 +1,11 @@
 package repository;
 
-import model.Rental;
-import model.RentalBill;
-import model.RentalStatus;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+import model.Rental;
+import model.RentalBill;
+import model.RentalStatus;
 
 public class RentalRepository {
     private static final String DATA_FILE = "data/rentals.txt";

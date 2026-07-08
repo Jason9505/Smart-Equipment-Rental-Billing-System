@@ -1,5 +1,9 @@
 package ui;
 
+import java.awt.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import model.Equipment;
 import model.Rental;
 import model.RentalBill;
@@ -8,11 +12,6 @@ import service.EquipmentService;
 import service.RentalObserver;
 import service.RentalService;
 import service.UserService;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.List;
 
 public class ReturnBillingPanel extends JPanel implements RentalObserver {
     private final RentalService rentalService;
@@ -39,6 +38,7 @@ public class ReturnBillingPanel extends JPanel implements RentalObserver {
         JButton returnButton = new JButton("Return Equipment");
         returnButton.addActionListener(e -> showReturnDialog());
         topPanel.add(returnButton);
+
         add(topPanel, BorderLayout.NORTH);
 
         String[] columns = {"Rental ID", "Equipment", "User", "Return Date",
@@ -50,10 +50,11 @@ public class ReturnBillingPanel extends JPanel implements RentalObserver {
         historyTable.setFillsViewportHeight(true);
         add(new JScrollPane(historyTable), BorderLayout.CENTER);
 
-        billArea = new JTextArea(4, 40);
+        billArea = new JTextArea(6, 40);
         billArea.setEditable(false);
+        billArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         billArea.setBorder(BorderFactory.createTitledBorder("Last Bill Detail"));
-        add(billArea, BorderLayout.SOUTH);
+        add(new JScrollPane(billArea), BorderLayout.SOUTH);
 
         rentalService.addObserver(this);
     }
@@ -118,6 +119,7 @@ public class ReturnBillingPanel extends JPanel implements RentalObserver {
             Rental selected = active.get(rentalCombo.getSelectedIndex());
             boolean damaged = damagedCheck.isSelected();
 
+            //enters RentalService
             String error = rentalService.returnEquipment(selected.getRentalId(), damaged);
             if (error != null) {
                 JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
@@ -127,13 +129,11 @@ public class ReturnBillingPanel extends JPanel implements RentalObserver {
 
     @Override
     public void onRented(Rental rental, Equipment equipment) {
-        
     }
 
     @Override
     public void onReturned(Rental rental, Equipment equipment, RentalBill bill) {
         refreshHistory();
-        billArea.setText(
-                "Rental " + rental.getRentalId() + " - " + equipment.getName() + "\n" + bill.toString());
+        billArea.setText(bill.toDetailedString());
     }
 }

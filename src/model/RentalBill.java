@@ -18,6 +18,20 @@ public class RentalBill {
     public double getPenalty() { return penalty; }
     public double getNetPayable() { return netPayable; }
 
+    public String toDetailedString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Base Fee:      RM%8.2f%n", baseFee));
+        if (discount > 0) {
+            sb.append(String.format("Discount:     -RM%8.2f%n", discount));
+        }
+        if (penalty > 0) {
+            sb.append(String.format("Penalty:      +RM%8.2f%n", penalty));
+        }
+        sb.append("------------------------------\n");
+        sb.append(String.format("Net Payable:   RM%8.2f", netPayable));
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         return String.format(

@@ -1,10 +1,9 @@
 package service;
 
+import java.util.List;
 import model.Equipment;
 import model.EquipmentCategory;
 import repository.EquipmentRepository;
-
-import java.util.List;
 
 public class EquipmentService {
     private final EquipmentRepository equipmentRepo;
